@@ -99,6 +99,13 @@ cd client && npm run dev
 - API: http://localhost:5001 (set `PORT` in `server/.env`)
 - Health: http://localhost:5001/api/health
 
+### Frontend shell (Phase 4)
+
+- `/login`, `/register` (normal users)
+- Role-based sidebar + protected routes
+- Shared UI: `Button`, `Input`, `Table`, `StatCard`, `RatingPicker` (lucide icons)
+- Feature pages are placeholders until Phase 5
+
 ## Tailwind CSS
 
 Tailwind v4 with `@tailwindcss/vite` in `client/vite.config.js`. Theme tokens: `client/tailwind.config.js` (`THEME.md`).

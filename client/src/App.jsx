@@ -1,40 +1,55 @@
-import { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext.jsx";
+import AppLayout from "./components/layout/AppLayout.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import RequireRole from "./components/RequireRole.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import PasswordPage from "./pages/PasswordPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import StoresPage from "./pages/StoresPage.jsx";
+import UsersPage from "./pages/UsersPage.jsx";
 
-function App() {
-  const [health, setHealth] = useState(null);
-  const [error, setError] = useState(null);
+function RootRedirect() {
+  const { isAuthenticated, homePath } = useAuth();
+  return <Navigate to={isAuthenticated ? homePath : "/login"} replace />;
+}
 
-  useEffect(() => {
-    fetch("/api/health")
-      .then((res) => {
-        if (!res.ok) throw new Error("API unreachable");
-        return res.json();
-      })
-      .then(setHealth)
-      .catch((err) => setError(err.message));
-  }, []);
-
+function AppRoutes() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-6">
-      <h1 className="text-2xl font-semibold text-text-primary">StoreRate</h1>
-      <p className="mt-2 text-text-secondary">Phase 0 — project foundation</p>
-      <div className="mt-8 w-full max-w-sm rounded-card border border-border bg-surface p-6">
-        {error && (
-          <p className="text-sm text-error">
-            API: {error} (start server with <code>npm run dev:server</code>)
-          </p>
-        )}
-        {health && (
-          <p className="text-sm text-success">
-            API connected — {health.service}
-          </p>
-        )}
-        {!health && !error && (
-          <p className="text-sm text-text-secondary">Checking API…</p>
-        )}
-      </div>
-    </div>
+    <Routes>
+      <Route path="/" element={<RootRedirect />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route element={<RequireRole roles={["ADMIN", "STORE_OWNER"]} />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+          </Route>
+          <Route element={<RequireRole roles={["ADMIN", "USER"]} />}>
+            <Route path="/stores" element={<StoresPage />} />
+          </Route>
+          <Route element={<RequireRole roles={["ADMIN"]} />}>
+            <Route path="/users" element={<UsersPage />} />
+          </Route>
+          <Route element={<RequireRole roles={["USER", "STORE_OWNER"]} />}>
+            <Route path="/password" element={<PasswordPage />} />
+          </Route>
+        </Route>
+      </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}
