@@ -24,6 +24,25 @@ cp server/.env.example server/.env
 # Edit server/.env — set DATABASE_URL and JWT_SECRET
 ```
 
+### Database (Phase 1)
+
+From `server/`:
+
+```bash
+npm install
+npx prisma migrate dev --name init
+npm run db:seed
+```
+
+Default **admin** (after seed):
+
+| Field | Value |
+|-------|--------|
+| Email | `admin@storerate.com` |
+| Password | `Admin@12345` |
+
+Change these in production; do not commit `server/.env`.
+
 ## Development
 
 ```bash
