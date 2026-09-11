@@ -43,6 +43,14 @@ Default **admin** (after seed):
 
 Change these in production; do not commit `server/.env`.
 
+### Auth (Phase 2)
+
+| Method | Path | Notes |
+|--------|------|--------|
+| POST | `/api/auth/register` | Normal user signup only |
+| POST | `/api/auth/login` | All roles |
+| POST | `/api/auth/change-password` | `USER` and `STORE_OWNER` (Bearer token) |
+
 ## Development
 
 ```bash
