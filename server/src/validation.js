@@ -58,3 +58,18 @@ export function collectSignupErrors({ name, email, address, password }) {
   if (passwordErr) errors.push({ field: "password", message: passwordErr });
   return errors;
 }
+
+export function validateRatingScore(score) {
+  const value = Number(score);
+  if (!Number.isInteger(value) || value < 1 || value > 5) {
+    return "Rating must be an integer between 1 and 5.";
+  }
+  return null;
+}
+
+export function validateAdminUserRole(role) {
+  if (role !== "USER" && role !== "ADMIN") {
+    return "Role must be USER or ADMIN.";
+  }
+  return null;
+}
