@@ -108,7 +108,7 @@ If port 5001 is busy, change `PORT` in `server/.env` and update `client/vite.con
 
 ### Protected (Bearer token)
 
-- **Admin:** `/api/admin/dashboard`, `/api/admin/stores`, `/api/admin/users`, `/api/admin/users/:id`
+- **Admin:** `/api/admin/dashboard`, `/api/admin/stores`, `/api/admin/users`, `/api/admin/users/:id` (GET), `DELETE /api/admin/users/:id`
 - **User:** `GET /api/stores`, `PUT /api/stores/:id/rating`
 - **Store owner:** `GET /api/owner/dashboard`
 
@@ -118,7 +118,7 @@ List endpoints support **filter** query params and **`sortBy` / `sortOrder`** (`
 
 - [ ] Admin login → dashboard counts load
 - [ ] Admin add store → owner can login → owner dashboard (empty raters until rated)
-- [ ] Admin add normal user and admin user
+- [ ] Admin **Users** list (view only); **Delete user** in sidebar — normal users only, confirm modal
 - [ ] Admin filter/sort stores and users; open user detail; store owner shows rating when applicable
 - [ ] Normal user register/login → search stores by name/address → submit and update rating
 - [ ] Normal user / store owner change password; admin cannot use change-password endpoint

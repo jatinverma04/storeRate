@@ -16,6 +16,19 @@ import {
 
 const router = Router();
 
+function adminCanViewUser(target, adminUserId) {
+  if (target.role === Role.ADMIN) return true;
+  if (!target.createdByAdminId) return true;
+  return target.createdByAdminId === adminUserId;
+}
+
+function adminCanDeleteUser(target, adminUserId) {
+  if (!adminCanViewUser(target, adminUserId)) return false;
+  if (target.id === adminUserId) return false;
+  if (target.role !== Role.USER) return false;
+  return true;
+}
+
 router.use(authenticate, requireRole(Role.ADMIN));
 
 router.get("/dashboard", async (_req, res) => {
@@ -93,6 +106,7 @@ router.post("/stores", async (req, res) => {
         address: address.trim(),
         password: passwordHash,
         role: Role.STORE_OWNER,
+        createdByAdminId: req.user.userId,
       },
     });
     return tx.store.create({
@@ -124,17 +138,29 @@ router.get("/users", async (req, res) => {
     "role",
     "createdAt",
   ]);
-  const where = buildTextFilters(req.query, ["name", "email", "address"]);
+  const textWhere = buildTextFilters(req.query, ["name", "email", "address"]);
+  const and = [textWhere];
 
+  const forDelete = req.query.forDelete === "true";
   const roleFilter = req.query.role;
-  if (roleFilter && Object.values(Role).includes(roleFilter)) {
-    where.role = roleFilter;
+  if (forDelete) {
+    and.push({ role: Role.USER });
+  } else if (roleFilter && Object.values(Role).includes(roleFilter)) {
+    and.push({ role: roleFilter });
   } else {
-    where.role = { in: [Role.USER, Role.ADMIN] };
+    and.push({ role: { in: [Role.USER, Role.ADMIN] } });
   }
 
+  and.push({
+    OR: [
+      { role: Role.ADMIN },
+      { createdByAdminId: null },
+      { createdByAdminId: req.user.userId },
+    ],
+  });
+
   const users = await prisma.user.findMany({
-    where,
+    where: { AND: and },
     orderBy: sortBy === "role" ? { role: sortOrder } : { [sortBy]: sortOrder },
     select: {
       id: true,
@@ -142,10 +168,24 @@ router.get("/users", async (req, res) => {
       email: true,
       address: true,
       role: true,
+      createdByAdminId: true,
     },
   });
 
-  res.json({ users });
+  let visible = users;
+  if (forDelete) {
+    visible = users.filter((u) => adminCanDeleteUser(u, req.user.userId));
+  }
+
+  const items = visible.map((u) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    address: u.address,
+    role: u.role,
+  }));
+
+  res.json({ users: items });
 });
 
 router.post("/users", async (req, res) => {
@@ -176,6 +216,7 @@ router.post("/users", async (req, res) => {
       address: address.trim(),
       password: passwordHash,
       role,
+      createdByAdminId: req.user.userId,
     },
     select: {
       id: true,
@@ -198,11 +239,12 @@ router.get("/users/:id", async (req, res) => {
       email: true,
       address: true,
       role: true,
+      createdByAdminId: true,
       store: { select: { id: true } },
     },
   });
 
-  if (!user) {
+  if (!user || !adminCanViewUser(user, req.user.userId)) {
     return res.status(404).json({ message: "User not found." });
   }
 
@@ -215,8 +257,27 @@ router.get("/users/:id", async (req, res) => {
     rating = roundRating(agg._avg.score);
   }
 
-  const { store, ...rest } = user;
+  const { store, createdByAdminId, ...rest } = user;
   res.json({ user: { ...rest, rating } });
+});
+
+router.delete("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  if (id === req.user.userId) {
+    return res.status(400).json({ message: "You cannot delete your own account." });
+  }
+
+  const existing = await prisma.user.findUnique({ where: { id } });
+  if (!existing || !adminCanViewUser(existing, req.user.userId)) {
+    return res.status(404).json({ message: "User not found." });
+  }
+
+  if (!adminCanDeleteUser(existing, req.user.userId)) {
+    return res.status(403).json({ message: "Only normal user accounts can be deleted." });
+  }
+
+  await prisma.user.delete({ where: { id } });
+  res.status(204).send();
 });
 
 export default router;

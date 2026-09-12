@@ -212,7 +212,6 @@ function UserStores() {
     loadStores();
   }, [loadStores]);
 
-
   async function submitRating(storeId) {
     const score = draftRatings[storeId];
     if (!score || score < 1) return;

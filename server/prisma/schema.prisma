@@ -14,15 +14,18 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  address   String
-  role      Role
-  store     Store?   @relation("StoreOwner")
-  ratings   Rating[]
-  createdAt DateTime @default(now())
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  password         String
+  address          String
+  role             Role
+  createdByAdminId String?
+  createdByAdmin   User?    @relation("AdminCreatedUsers", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+  usersCreated     User[]   @relation("AdminCreatedUsers")
+  store            Store?   @relation("StoreOwner")
+  ratings          Rating[]
+  createdAt        DateTime @default(now())
 }
 
 model Store {

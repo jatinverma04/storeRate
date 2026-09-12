@@ -17,6 +17,7 @@ export function navItemsForRole(role) {
         { to: "/dashboard", label: "Dashboard", icon: "LayoutDashboard" },
         { to: "/stores", label: "Stores", icon: "Store" },
         { to: "/users", label: "Users", icon: "Users" },
+        { to: "/users/delete", label: "Delete user", icon: "UserX" },
       ];
     case "USER":
       return [

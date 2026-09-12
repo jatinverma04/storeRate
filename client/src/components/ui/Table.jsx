@@ -34,6 +34,10 @@ export function Th({ children, className = "" }) {
   );
 }
 
-export function Td({ children, className = "" }) {
-  return <td className={`px-4 py-3 ${className}`}>{children}</td>;
+export function Td({ children, className = "", ...props }) {
+  return (
+    <td className={`px-4 py-3 ${className}`} {...props}>
+      {children}
+    </td>
+  );
 }

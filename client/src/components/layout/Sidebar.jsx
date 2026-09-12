@@ -7,6 +7,7 @@ import {
   Menu,
   Store,
   Users,
+  UserX,
   X,
 } from "lucide-react";
 import ThemeToggle from "../ThemeToggle.jsx";
@@ -17,6 +18,7 @@ const iconMap = {
   LayoutDashboard,
   Store,
   Users,
+  UserX,
   KeyRound,
 };
 

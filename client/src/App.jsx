@@ -10,6 +10,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import StoresPage from "./pages/StoresPage.jsx";
 import UsersPage from "./pages/UsersPage.jsx";
 import UserDetailPage from "./pages/UserDetailPage.jsx";
+import DeleteUserPage from "./pages/DeleteUserPage.jsx";
 
 function RootRedirect() {
   const { isAuthenticated, homePath } = useAuth();
@@ -33,6 +34,7 @@ function AppRoutes() {
           </Route>
           <Route element={<RequireRole roles={["ADMIN"]} />}>
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/users/delete" element={<DeleteUserPage />} />
             <Route path="/users/:id" element={<UserDetailPage />} />
           </Route>
           <Route element={<RequireRole roles={["USER", "STORE_OWNER"]} />}>
