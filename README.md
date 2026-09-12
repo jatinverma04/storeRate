@@ -2,6 +2,25 @@
 
 Web app for rating stores (1–5). Built for the **Full Stack Intern Coding Challenge**: one login, three roles (System Administrator, Normal User, Store Owner).
 
+## Live demo
+
+| | Link |
+|---|------|
+| **Deployed app** | [https://store-rate-fawn.vercel.app/](https://store-rate-fawn.vercel.app/) |
+| **GitHub repository** | [https://github.com/jatinverma04/storeRate](https://github.com/jatinverma04/storeRate) |
+| **API health** | [https://storerate-r2c4.onrender.com/api/health](https://storerate-r2c4.onrender.com/api/health) |
+
+### Demo logins (seeded on deployed database)
+
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** (primary) | `admin@storerate.com` | `Admin@12345` |
+| **Admin** | `priya.admin@storerate.com` | `Admin@12345` |
+| **Normal user** | `rohan.user@example.com` | `User@12345` |
+| **Store owner** | `anita.owner@storerate.com` | `Owner@12345` |
+
+Other store owners (`vikram.owner@`, `meera.owner@`, `arjun.owner@`, `sofia.owner@` @storerate.com) use password **`Owner@12345`**. New normal users can **Register** at `/register`.
+
 ## Tech stack
 
 | Layer | Choice |
@@ -199,11 +218,11 @@ Serve `client/dist` (static host, nginx, etc.).
 
    | Name | Value |
    |------|--------|
-   | `VITE_API_URL` | `https://YOUR-SERVICE.onrender.com` (no trailing slash) |
+   | `VITE_API_URL` | `https://storerate-r2c4.onrender.com` (no trailing slash) |
 
-4. Deploy. Copy the Vercel URL (e.g. `https://storerate.vercel.app`).
+4. Deploy. Copy the Vercel URL (e.g. `https://store-rate-fawn.vercel.app`).
 5. **Render** → API service → **Environment** → set `CLIENT_URL` to that Vercel URL → redeploy API.
-6. On Render **Shell** (once): `npm run db:seed` for demo logins.
+6. Load demo data once: `npm run db:seed` from `server/` (local machine with production `DATABASE_URL`, or Render Shell if available).
 
 Health check: `GET /api/health` on the Render URL.
 
