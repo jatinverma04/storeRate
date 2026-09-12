@@ -130,7 +130,7 @@ export default function UsersPage() {
             value={filters.role}
             onChange={(e) => setFilters((f) => ({ ...f, role: e.target.value }))}
           >
-            <option value="">Normal &amp; Admin</option>
+            <option value="">All roles</option>
             <option value="USER">Normal User</option>
             <option value="ADMIN">Admin</option>
             <option value="STORE_OWNER">Store Owner</option>

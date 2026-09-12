@@ -16,17 +16,10 @@ import {
 
 const router = Router();
 
-function adminCanViewUser(target, adminUserId) {
-  if (target.role === Role.ADMIN) return true;
-  if (!target.createdByAdminId) return true;
-  return target.createdByAdminId === adminUserId;
-}
-
 function adminCanDeleteUser(target, adminUserId) {
-  if (!adminCanViewUser(target, adminUserId)) return false;
   if (target.id === adminUserId) return false;
-  if (target.role !== Role.USER) return false;
-  return true;
+  if (target.role === Role.ADMIN) return false;
+  return target.role === Role.USER || target.role === Role.STORE_OWNER;
 }
 
 router.use(authenticate, requireRole(Role.ADMIN));
@@ -144,20 +137,14 @@ router.get("/users", async (req, res) => {
   const forDelete = req.query.forDelete === "true";
   const roleFilter = req.query.role;
   if (forDelete) {
-    and.push({ role: Role.USER });
+    and.push({ role: { in: [Role.USER, Role.STORE_OWNER] } });
   } else if (roleFilter && Object.values(Role).includes(roleFilter)) {
     and.push({ role: roleFilter });
   } else {
-    and.push({ role: { in: [Role.USER, Role.ADMIN] } });
+    and.push({
+      role: { in: [Role.USER, Role.ADMIN, Role.STORE_OWNER] },
+    });
   }
-
-  and.push({
-    OR: [
-      { role: Role.ADMIN },
-      { createdByAdminId: null },
-      { createdByAdminId: req.user.userId },
-    ],
-  });
 
   const users = await prisma.user.findMany({
     where: { AND: and },
@@ -168,14 +155,12 @@ router.get("/users", async (req, res) => {
       email: true,
       address: true,
       role: true,
-      createdByAdminId: true,
     },
   });
 
-  let visible = users;
-  if (forDelete) {
-    visible = users.filter((u) => adminCanDeleteUser(u, req.user.userId));
-  }
+  const visible = forDelete
+    ? users.filter((u) => adminCanDeleteUser(u, req.user.userId))
+    : users;
 
   const items = visible.map((u) => ({
     id: u.id,
@@ -239,12 +224,11 @@ router.get("/users/:id", async (req, res) => {
       email: true,
       address: true,
       role: true,
-      createdByAdminId: true,
       store: { select: { id: true } },
     },
   });
 
-  if (!user || !adminCanViewUser(user, req.user.userId)) {
+  if (!user) {
     return res.status(404).json({ message: "User not found." });
   }
 
@@ -257,7 +241,7 @@ router.get("/users/:id", async (req, res) => {
     rating = roundRating(agg._avg.score);
   }
 
-  const { store, createdByAdminId, ...rest } = user;
+  const { store, ...rest } = user;
   res.json({ user: { ...rest, rating } });
 });
 
@@ -268,12 +252,14 @@ router.delete("/users/:id", async (req, res) => {
   }
 
   const existing = await prisma.user.findUnique({ where: { id } });
-  if (!existing || !adminCanViewUser(existing, req.user.userId)) {
+  if (!existing) {
     return res.status(404).json({ message: "User not found." });
   }
 
   if (!adminCanDeleteUser(existing, req.user.userId)) {
-    return res.status(403).json({ message: "Only normal user accounts can be deleted." });
+    return res.status(403).json({
+      message: "You cannot delete admin accounts or your own account.",
+    });
   }
 
   await prisma.user.delete({ where: { id } });

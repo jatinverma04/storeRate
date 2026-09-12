@@ -287,18 +287,22 @@ function UserStores() {
               key={store.id}
               className="rounded-card border border-border bg-surface p-4"
             >
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <p className="font-medium text-text-primary">{store.name}</p>
-                  <p className="text-sm text-text-secondary">{store.address}</p>
-                </div>
-                <div className="text-sm text-text-secondary">
-                  Overall: <span className="text-text-primary">{formatRating(store.overallRating)}</span>
-                  {" · "}
-                  Yours: <span className="text-text-primary">{formatRating(store.myRating)}</span>
-                </div>
+              <div className="space-y-1">
+                <p className="font-medium text-text-primary">{store.name}</p>
+                <p className="text-sm text-text-secondary">{store.address}</p>
+                <p className="text-sm text-text-secondary">
+                  Overall:{" "}
+                  <span className="font-medium text-text-primary">
+                    {formatRating(store.overallRating)}
+                  </span>
+                  <span className="mx-2">·</span>
+                  Your rating:{" "}
+                  <span className="font-medium text-text-primary">
+                    {formatRating(store.myRating)}
+                  </span>
+                </p>
               </div>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <RatingPicker
                   value={draftRatings[store.id] || null}
                   onChange={(score) =>

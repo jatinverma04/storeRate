@@ -7,9 +7,9 @@ export default function AppLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background md:items-start">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-3 border-b border-border bg-surface px-4 py-3 md:hidden">
           <MobileMenuButton onOpen={() => setSidebarOpen(true)} />
           <img src="/favicon.svg" alt="" className="h-7 w-7" width="28" height="28" />

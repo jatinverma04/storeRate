@@ -49,7 +49,7 @@ export default function Sidebar({ open, onClose }) {
           <ThemeToggle />
         </div>
       </div>
-      <nav className="flex flex-1 flex-col gap-1 p-3">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
         {items.map((item) => {
           const Icon = iconMap[item.icon];
           return (
@@ -94,7 +94,7 @@ export default function Sidebar({ open, onClose }) {
 
   return (
     <>
-      <aside className="hidden h-screen w-56 shrink-0 border-r border-border bg-surface md:block">
+      <aside className="sticky top-0 hidden h-screen w-56 shrink-0 self-start border-r border-border bg-surface md:block">
         {content}
       </aside>
 

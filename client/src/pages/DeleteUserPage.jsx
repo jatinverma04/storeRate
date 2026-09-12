@@ -6,6 +6,7 @@ import Label from "../components/ui/Label.jsx";
 import Modal from "../components/ui/Modal.jsx";
 import { Table, TableBody, TableHead, TableRow, Td, Th } from "../components/ui/Table.jsx";
 import { toQueryString } from "../utils/queryString.js";
+import { formatRole } from "../utils/format.js";
 
 export default function DeleteUserPage() {
   const [filters, setFilters] = useState({ name: "", email: "", address: "" });
@@ -27,7 +28,9 @@ export default function DeleteUserPage() {
         sortOrder: "asc",
       });
       const data = await api(`/api/admin/users${qs}`);
-      setUsers(data.users);
+      setUsers(
+        data.users.filter((u) => u.role === "USER" || u.role === "STORE_OWNER")
+      );
     } catch (err) {
       setError(err.message || "Failed to load users.");
     } finally {
@@ -64,7 +67,8 @@ export default function DeleteUserPage() {
     <div>
       <h1 className="text-xl font-semibold text-text-primary">Delete user</h1>
       <p className="mt-1 text-sm text-text-secondary">
-        Normal users you are allowed to remove. Admins and store owners are not listed here.
+        Normal users and store owners are listed here. Admins are not shown; you cannot delete your
+        own account.
       </p>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -93,7 +97,7 @@ export default function DeleteUserPage() {
               <TableRow>
                 <Th>Name</Th>
                 <Th>Email</Th>
-                <Th>Address</Th>
+                <Th>Role</Th>
                 <Th>Delete</Th>
               </TableRow>
             </TableHead>
@@ -109,7 +113,7 @@ export default function DeleteUserPage() {
                   <TableRow key={u.id}>
                     <Td>{u.name}</Td>
                     <Td>{u.email}</Td>
-                    <Td>{u.address}</Td>
+                    <Td>{formatRole(u.role)}</Td>
                     <Td>
                       <Button
                         type="button"
@@ -146,7 +150,16 @@ export default function DeleteUserPage() {
                 <dt className="text-xs text-text-secondary">Email</dt>
                 <dd className="text-text-primary">{pendingDelete.email}</dd>
               </div>
+              <div className="mt-2">
+                <dt className="text-xs text-text-secondary">Role</dt>
+                <dd className="text-text-primary">{formatRole(pendingDelete.role)}</dd>
+              </div>
             </dl>
+            {pendingDelete.role === "STORE_OWNER" && (
+              <p className="text-xs text-text-secondary">
+                This also removes their store and all ratings for that store.
+              </p>
+            )}
             {deleteError && <p className="text-sm text-error">{deleteError}</p>}
             <div className="flex flex-wrap gap-2">
               <Button type="button" variant="secondary" disabled={deleting} onClick={closeConfirm}>

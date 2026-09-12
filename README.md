@@ -48,12 +48,26 @@ npx prisma migrate deploy   # or: npm run db:migrate (dev)
 npm run db:seed
 ```
 
-**Seed admin** (development only):
+**Demo accounts** (development only — `npm run db:seed` wipes users, stores, and ratings, then reloads):
 
-| Field | Value |
-|--------|--------|
-| Email | `admin@storerate.com` |
-| Password | `Admin@12345` |
+| Role | Name | Email | Password |
+|------|------|-------|----------|
+| **Admin** (primary) | StoreRate Platform Administrator | `admin@storerate.com` | `Admin@12345` |
+| **Admin** | Priya Sharma Operations Administrator | `priya.admin@storerate.com` | `Admin@12345` |
+| **Normal user** | Rohan Mehta Community Member User | `rohan.user@example.com` | `User@12345` |
+| **Store owner** (featured) | Anita Desai Coffee Store Owner | `anita.owner@storerate.com` | `Owner@12345` |
+
+**Five seeded stores** (each has its own owner; all owners use `Owner@12345`):
+
+| Store | Owner email |
+|-------|-------------|
+| Downtown Coffee Collective Cafe | `anita.owner@storerate.com` |
+| GreenLeaf Organic Grocery Market | `vikram.owner@storerate.com` |
+| CityFit Premium Fitness Studio Hub | `meera.owner@storerate.com` |
+| TechHub Electronics Repair Center | `arjun.owner@storerate.com` |
+| Bella Napoli Italian Kitchen Restaurant | `sofia.owner@storerate.com` |
+
+The normal user has sample ratings on all five stores. Any admin can view and manage (except delete) all users; admins cannot delete other admins or themselves.
 
 Do not commit `server/.env` or use these credentials in production.
 
@@ -82,7 +96,7 @@ If port 5001 is busy, change `PORT` in `server/.env` and update `client/vite.con
 | **Normal User** | Sign up at `/register` | Stores (search, rate), Password |
 | **Store Owner** | Created when admin adds a store (same email/password) | Dashboard (raters + average), Password |
 
-**Store owners in admin:** Users list defaults to normal + admin users. Set **Role → Store Owner** in the filter, then **View** for details (includes store average rating).
+**Store owners in admin:** Users list shows normal users, admins, and store owners you manage (use **Role** filter to narrow). **View** a store owner for details including store average rating.
 
 **Add store:** Name, email, and address must meet validation (name 20–60 characters). Owner logs in with that email and the password you set.
 
@@ -118,7 +132,7 @@ List endpoints support **filter** query params and **`sortBy` / `sortOrder`** (`
 
 - [ ] Admin login → dashboard counts load
 - [ ] Admin add store → owner can login → owner dashboard (empty raters until rated)
-- [ ] Admin **Users** list (view only); **Delete user** in sidebar — normal users only, confirm modal
+- [ ] Admin **Users** list (view only); **Delete user** — normal users and store owners (not admins), confirm modal
 - [ ] Admin filter/sort stores and users; open user detail; store owner shows rating when applicable
 - [ ] Normal user register/login → search stores by name/address → submit and update rating
 - [ ] Normal user / store owner change password; admin cannot use change-password endpoint
