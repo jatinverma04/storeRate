@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button.jsx";
 import FieldError from "../components/ui/FieldError.jsx";
 import Input from "../components/ui/Input.jsx";
+import PasswordInput from "../components/ui/PasswordInput.jsx";
 import Label from "../components/ui/Label.jsx";
 import AuthLayout from "../components/layout/AuthLayout.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -76,14 +77,24 @@ export default function RegisterPage() {
               <Label htmlFor={key}>
                 {key === "password" ? "Password" : key.charAt(0).toUpperCase() + key.slice(1)}
               </Label>
-              <Input
-                id={key}
-                type={key === "password" ? "password" : key === "email" ? "email" : "text"}
-                autoComplete={key === "password" ? "new-password" : key}
-                value={form[key]}
-                onChange={(e) => updateField(key, e.target.value)}
-                error={fieldErrors[key]}
-              />
+              {key === "password" ? (
+                <PasswordInput
+                  id={key}
+                  autoComplete="new-password"
+                  value={form[key]}
+                  onChange={(e) => updateField(key, e.target.value)}
+                  error={fieldErrors[key]}
+                />
+              ) : (
+                <Input
+                  id={key}
+                  type={key === "email" ? "email" : "text"}
+                  autoComplete={key}
+                  value={form[key]}
+                  onChange={(e) => updateField(key, e.target.value)}
+                  error={fieldErrors[key]}
+                />
+              )}
               <FieldError message={fieldErrors[key]} />
             </div>
           ))}

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api } from "../api/http.js";
 import Button from "../components/ui/Button.jsx";
 import FieldError from "../components/ui/FieldError.jsx";
-import Input from "../components/ui/Input.jsx";
+import PasswordInput from "../components/ui/PasswordInput.jsx";
 import Label from "../components/ui/Label.jsx";
 import { validatePassword } from "../utils/validation.js";
 
@@ -60,9 +60,9 @@ export default function PasswordPage() {
         {success && <p className="text-sm text-success">{success}</p>}
         <div>
           <Label htmlFor="currentPassword">Current password</Label>
-          <Input
+          <PasswordInput
             id="currentPassword"
-            type="password"
+            autoComplete="current-password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             error={fieldErrors.currentPassword}
@@ -71,9 +71,9 @@ export default function PasswordPage() {
         </div>
         <div>
           <Label htmlFor="newPassword">New password</Label>
-          <Input
+          <PasswordInput
             id="newPassword"
-            type="password"
+            autoComplete="new-password"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             error={fieldErrors.newPassword}

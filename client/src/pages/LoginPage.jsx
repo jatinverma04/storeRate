@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Button from "../components/ui/Button.jsx";
 import FieldError from "../components/ui/FieldError.jsx";
 import Input from "../components/ui/Input.jsx";
+import PasswordInput from "../components/ui/PasswordInput.jsx";
 import Label from "../components/ui/Label.jsx";
 import AuthLayout from "../components/layout/AuthLayout.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -69,9 +70,8 @@ export default function LoginPage() {
           </div>
           <div>
             <Label htmlFor="password">Password</Label>
-            <Input
+            <PasswordInput
               id="password"
-              type="password"
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

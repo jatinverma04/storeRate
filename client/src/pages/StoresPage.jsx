@@ -4,6 +4,7 @@ import SortableTh from "../components/SortableTh.jsx";
 import Button from "../components/ui/Button.jsx";
 import FieldError from "../components/ui/FieldError.jsx";
 import Input from "../components/ui/Input.jsx";
+import PasswordInput from "../components/ui/PasswordInput.jsx";
 import Label from "../components/ui/Label.jsx";
 import Modal from "../components/ui/Modal.jsx";
 import RatingPicker from "../components/ui/RatingPicker.jsx";
@@ -149,13 +150,23 @@ function AdminStores() {
               <Label htmlFor={`store-${key}`}>
                 {key === "password" ? "Owner password" : key.charAt(0).toUpperCase() + key.slice(1)}
               </Label>
-              <Input
-                id={`store-${key}`}
-                type={key === "password" ? "password" : key === "email" ? "email" : "text"}
-                value={form[key]}
-                onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                error={fieldErrors[key]}
-              />
+              {key === "password" ? (
+                <PasswordInput
+                  id={`store-${key}`}
+                  autoComplete="new-password"
+                  value={form[key]}
+                  onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
+                  error={fieldErrors[key]}
+                />
+              ) : (
+                <Input
+                  id={`store-${key}`}
+                  type={key === "email" ? "email" : "text"}
+                  value={form[key]}
+                  onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
+                  error={fieldErrors[key]}
+                />
+              )}
               <FieldError message={fieldErrors[key]} />
             </div>
           ))}
