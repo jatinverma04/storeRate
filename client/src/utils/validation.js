@@ -48,3 +48,10 @@ export function collectSignupErrors(fields) {
   }
   return errors;
 }
+
+export function validateAdminUserRole(role) {
+  if (role !== "USER" && role !== "ADMIN") {
+    return "Role must be Normal User or Admin.";
+  }
+  return null;
+}

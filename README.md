@@ -104,7 +104,7 @@ cd client && npm run dev
 - `/login`, `/register` (normal users)
 - Role-based sidebar + protected routes
 - Shared UI: `Button`, `Input`, `Table`, `StatCard`, `RatingPicker` (lucide icons)
-- Feature pages are placeholders until Phase 5
+- Phase 5: dashboard, stores, users, ratings, password wired to API
 
 ## Tailwind CSS
 
