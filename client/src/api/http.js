@@ -1,5 +1,8 @@
 const TOKEN_KEY = "storeRate_token";
 
+/** Empty in dev (Vite proxies /api). Set on Vercel: VITE_API_URL=https://your-api.onrender.com */
+const API_ROOT = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, "");
+
 export function getStoredToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -14,7 +17,9 @@ export async function api(path, { method = "GET", body, token } = {}) {
   const headers = { "Content-Type": "application/json" };
   if (authToken) headers.Authorization = `Bearer ${authToken}`;
 
-  const res = await fetch(path, {
+  const url = path.startsWith("http") ? path : `${API_ROOT}${path}`;
+
+  const res = await fetch(url, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,

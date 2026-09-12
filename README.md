@@ -96,7 +96,7 @@ If port 5001 is busy, change `PORT` in `server/.env` and update `client/vite.con
 | **Normal User** | Sign up at `/register` | Stores (search, rate), Password |
 | **Store Owner** | Created when admin adds a store (same email/password) | Dashboard (raters + average), Password |
 
-**Store owners in admin:** Users list shows normal users, admins, and store owners you manage (use **Role** filter to narrow). **View** a store owner for details including store average rating.
+**Store owners in admin:** Users list shows normal users, admins, and store owners (use **Role** filter to narrow). **View** a store owner for details including store average rating.
 
 **Add store:** Name, email, and address must meet validation (name 20–60 characters). Owner logs in with that email and the password you set.
 
@@ -151,6 +151,62 @@ storeRate/
 
 ## Production notes
 
-- Set strong `JWT_SECRET` and production `DATABASE_URL`
-- `cd server && npm run db:deploy` before starting the server
-- Build client: `cd client && npm run build` — serve `client/dist` behind your host or point API CORS `CLIENT_URL` at your frontend origin
+### Environment (server)
+
+Set on your host (or `server/.env`):
+
+- `DATABASE_URL` — production PostgreSQL (e.g. Neon)
+- `JWT_SECRET` — long random string
+- `PORT` — host port (often `5001` or platform default)
+- `CLIENT_URL` — public frontend URL (for CORS), e.g. `https://your-app.example.com`
+
+### Database + demo data (first deploy)
+
+From `server/` with production `DATABASE_URL` loaded:
+
+```bash
+npm install
+npm run db:setup
+```
+
+`db:setup` runs **migrate deploy** then **seed**. **Seed deletes all users, stores, and ratings** and reloads the [demo accounts](#demo-accounts-development-only--npm-run-dbseed-wipes-users-stores-and-ratings-then-reloads) above. Safe for a fresh DB; do not run seed on a live DB you need to keep.
+
+To apply migrations only (no wipe):
+
+```bash
+npm run db:deploy
+```
+
+### Run API
+
+```bash
+npm start
+```
+
+### Frontend
+
+```bash
+cd client && npm install && npm run build
+```
+
+Serve `client/dist` (static host, nginx, etc.).
+
+### Vercel (frontend) + Render (API)
+
+1. **Vercel** → Import repo → **Root Directory:** `client`
+2. **Framework:** Vite (auto) — Build: `npm run build`, Output: `dist`
+3. **Environment variable** (Production):
+
+   | Name | Value |
+   |------|--------|
+   | `VITE_API_URL` | `https://YOUR-SERVICE.onrender.com` (no trailing slash) |
+
+4. Deploy. Copy the Vercel URL (e.g. `https://storerate.vercel.app`).
+5. **Render** → API service → **Environment** → set `CLIENT_URL` to that Vercel URL → redeploy API.
+6. On Render **Shell** (once): `npm run db:seed` for demo logins.
+
+Health check: `GET /api/health` on the Render URL.
+
+### Reviewer quick login
+
+After `db:setup`: `admin@storerate.com` / `Admin@12345` — see demo table above for all roles.
