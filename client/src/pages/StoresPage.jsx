@@ -248,6 +248,30 @@ function UserStores() {
             placeholder="Search by address…"
           />
         </div>
+        <div>
+          <Label htmlFor="sort-by">Sort by</Label>
+          <select
+            id="sort-by"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="name">Name</option>
+            <option value="address">Address</option>
+          </select>
+        </div>
+        <div>
+          <Label htmlFor="sort-order">Order</Label>
+          <select
+            id="sort-order"
+            className="w-full rounded-input border border-border bg-surface px-3 py-2 text-sm"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
       </div>
 
       {error && <p className="mt-4 text-sm text-error">{error}</p>}

@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev:client": "npm run dev --prefix client",
-    "dev:server": "npm run dev --prefix server"
+    "dev:server": "npm run dev --prefix server",
+    "test:server": "npm run test:auth --prefix server && npm run test:api --prefix server"
   }
 }

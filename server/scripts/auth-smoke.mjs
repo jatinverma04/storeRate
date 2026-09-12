@@ -1,4 +1,4 @@
-const base = process.env.API_URL || "http://localhost:5002";
+const base = process.env.API_URL || "http://localhost:5001";
 
 async function post(path, body, token) {
   const res = await fetch(`${base}${path}`, {
