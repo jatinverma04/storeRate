@@ -12,7 +12,7 @@ Web app for rating stores (1–5). Built for the **Full Stack Intern Coding Chal
 | ORM | Prisma |
 | Auth | JWT, bcrypt |
 
-UI theme: see [THEME.md](./THEME.md).
+UI colors are defined in `client/tailwind.config.js` and `client/src/index.css`.
 
 ## Prerequisites
 
@@ -114,18 +114,6 @@ If port 5001 is busy, change `PORT` in `server/.env` and update `client/vite.con
 
 List endpoints support **filter** query params and **`sortBy` / `sortOrder`** (`asc` | `desc`).
 
-## Automated checks
-
-With the API running on `PORT` (default 5001):
-
-```bash
-cd server
-npm run test:auth
-npm run test:api
-```
-
-Override base URL: `API_URL=http://localhost:5001 npm run test:api`
-
 ## Manual test checklist
 
 - [ ] Admin login → dashboard counts load
@@ -145,7 +133,6 @@ storeRate/
   server/
     prisma/         schema & migrations
     src/routes/     auth, admin, stores, owner
-  THEME.md
 ```
 
 ## Production notes

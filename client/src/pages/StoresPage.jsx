@@ -201,13 +201,6 @@ function UserStores() {
     loadStores();
   }, [loadStores]);
 
-  function toggleSort(field) {
-    if (sortBy === field) setSortOrder((o) => (o === "asc" ? "desc" : "asc"));
-    else {
-      setSortBy(field);
-      setSortOrder("asc");
-    }
-  }
 
   async function submitRating(storeId) {
     const score = draftRatings[storeId];

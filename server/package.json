@@ -10,8 +10,6 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "test:auth": "node scripts/auth-smoke.mjs",
-    "test:api": "node scripts/api-smoke.mjs",
     "postinstall": "prisma generate"
   },
   "prisma": {

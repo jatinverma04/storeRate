@@ -4,6 +4,7 @@ import Button from "../components/ui/Button.jsx";
 import FieldError from "../components/ui/FieldError.jsx";
 import Input from "../components/ui/Input.jsx";
 import Label from "../components/ui/Label.jsx";
+import AuthLayout from "../components/layout/AuthLayout.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { homePathForRole } from "../utils/roles.js";
 
@@ -42,7 +43,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+    <AuthLayout>
       <div className="w-full max-w-md rounded-card border border-border bg-surface p-6 md:p-8">
         <h1 className="text-xl font-semibold text-text-primary">Log in</h1>
         <p className="mt-1 text-sm text-text-secondary">
@@ -89,6 +90,6 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

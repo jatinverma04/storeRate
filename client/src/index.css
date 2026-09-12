@@ -1,5 +1,61 @@
 @import "tailwindcss";
-@config "../tailwind.config.js";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --sr-primary: #374151;
+  --sr-primary-hover: #1f2937;
+  --sr-accent: #6b8e6b;
+  --sr-background: #f7f7f5;
+  --sr-surface: #ffffff;
+  --sr-text-primary: #1f2937;
+  --sr-text-secondary: #6b7280;
+  --sr-border: #e5e7eb;
+  --sr-success: #4d7c5a;
+  --sr-error: #b91c1c;
+  --sr-warning: #a16207;
+  --sr-rating-unselected: #d1d5db;
+  --sr-nav-active: #ecede9;
+}
+
+html.dark {
+  --sr-primary: #e5e7eb;
+  --sr-primary-hover: #f9fafb;
+  --sr-accent: #6b8e6b;
+  --sr-background: #111827;
+  --sr-surface: #1f2937;
+  --sr-text-primary: #f3f4f6;
+  --sr-text-secondary: #9ca3af;
+  --sr-border: #374151;
+  --sr-success: #6b9c78;
+  --sr-error: #f87171;
+  --sr-warning: #d4a017;
+  --sr-rating-unselected: #6b7280;
+  --sr-nav-active: #374151;
+}
+
+@theme {
+  --font-sans: Inter, system-ui, sans-serif;
+
+  --color-primary: var(--sr-primary);
+  --color-primary-hover: var(--sr-primary-hover);
+  --color-accent: var(--sr-accent);
+  --color-background: var(--sr-background);
+  --color-surface: var(--sr-surface);
+  --color-text-primary: var(--sr-text-primary);
+  --color-text-secondary: var(--sr-text-secondary);
+  --color-border: var(--sr-border);
+  --color-success: var(--sr-success);
+  --color-error: var(--sr-error);
+  --color-warning: var(--sr-warning);
+  --color-rating-unselected: var(--sr-rating-unselected);
+  --color-nav-active: var(--sr-nav-active);
+
+  --radius-input: 6px;
+  --radius-button: 6px;
+  --radius-card: 8px;
+  --radius-modal: 8px;
+}
 
 @layer base {
   body {
